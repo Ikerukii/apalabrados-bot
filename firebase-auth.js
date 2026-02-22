@@ -140,7 +140,7 @@ if (auth && db) {
 
 function renderLoginButton() {
     userProfileContainer.innerHTML = `
-        <button id="login-btn" class="login-btn" onclick="if(window.FirebaseAuth) window.FirebaseAuth.loginWithGoogle()">
+        <button id="login-btn" class="login-btn">
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" alt="G">
             Entrar con Google
         </button>
