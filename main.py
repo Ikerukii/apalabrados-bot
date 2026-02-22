@@ -10,7 +10,8 @@ import uvicorn
 import stripe
 import firebase_admin
 from firebase_admin import credentials, firestore
-from fastapi import Request, HTTPException, Header
+from fastapi import FastAPI, Request, HTTPException, Header
+from fastapi.middleware.cors import CORSMiddleware
 
 # ── FIREBASE ADMIN ────────────────────────────────────────────────────────────
 # En Railway usaremos la variable de entorno FIREBASE_SERVICE_ACCOUNT (JSON string)
