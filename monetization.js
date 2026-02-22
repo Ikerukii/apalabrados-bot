@@ -1,6 +1,7 @@
 // ============================================================
 // monetization.js — Apalabrados Usage Tracker + Ads
 // ============================================================
+// URL pública: https://apalabrados-bot.up.railway.app
 // Fase 1: límite de usos por día (localStorage) + banners publicitarios
 // Fase 2 (futura): autenticación real + Stripe
 
