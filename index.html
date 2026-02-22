@@ -116,16 +116,6 @@
                         <div class="ocr-spinner"></div>
                         <span id="ocr-status-text">Analizando...</span>
                     </div>
-
-                    <!-- OCR interactivos dentro del panel -->
-                    <div id="ocr-controls" class="hidden">
-                        <div class="ocr-sliders">
-                            <label>Zoom: <input type="range" id="ocr-zoom" min="60" max="130" value="98"></label>
-                            <label>X: <input type="range" id="ocr-x" min="-100" max="100" value="0"></label>
-                            <label>Y: <input type="range" id="ocr-y" min="-100" max="100" value="0"></label>
-                        </div>
-                        <button id="ocr-start-btn" class="solve-btn ocr-confirm-btn">Confirmar OCR</button>
-                    </div>
                 </div>
 
                 <div id="results-panel" class="results-panel hidden">
@@ -136,7 +126,40 @@
                 </div>
             </div>
 
-            <canvas id="ocr-canvas" style="display:none;"></canvas>
+            <!-- OCR Modal -->
+            <div id="ocr-modal" class="limit-modal hidden">
+                <div class="limit-modal-card ocr-modal-card">
+                    <div class="panel-header">
+                        <h3>Ajustar captura de pantalla</h3>
+                    </div>
+
+                    <div class="ocr-preview-container">
+                        <canvas id="ocr-canvas"></canvas>
+                    </div>
+
+                    <div id="ocr-controls" class="ocr-modal-controls">
+                        <div class="ocr-sliders">
+                            <div class="slider-group">
+                                <label>Zoom</label>
+                                <input type="range" id="ocr-zoom" min="60" max="130" value="98">
+                            </div>
+                            <div class="slider-group">
+                                <label>Mover ↔ (X)</label>
+                                <input type="range" id="ocr-x" min="-100" max="100" value="0">
+                            </div>
+                            <div class="slider-group">
+                                <label>Mover ↕ (Y)</label>
+                                <input type="range" id="ocr-y" min="-100" max="100" value="0">
+                            </div>
+                        </div>
+
+                        <div class="limit-modal-actions">
+                            <button id="ocr-start-btn" class="limit-modal-premium">Confirmar y Escanear</button>
+                            <button id="ocr-cancel-btn" class="limit-modal-dismiss">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
         <footer>
             <div style="text-align:center; font-size:0.75rem; color:#94a3b8;">
