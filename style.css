@@ -753,18 +753,22 @@ p {
 
 /* ── OCR Modal Styles ────────────────────────────────────────── */
 .ocr-modal-card {
-    max-width: 800px !important;
+    max-width: 900px !important;
+    width: 95% !important;
     padding: 20px !important;
     display: flex;
     flex-direction: column;
     gap: 15px;
-    max-height: 95vh;
+    max-height: 90vh;
+    /* Un poco menos para dejar margen visual */
+    overflow: hidden;
+    /* Evitar que el card mismo scrollee */
 }
 
 .ocr-preview-container {
     flex: 1;
-    min-height: 300px;
-    /* Un poco más de espacio inicial */
+    min-height: 0;
+    /* CRÍTICO: Permite que el contenedor se encoja dentro del flex */
     background: #000;
     border-radius: 12px;
     overflow: hidden;
@@ -778,6 +782,8 @@ p {
 #ocr-canvas {
     max-width: 100%;
     max-height: 100%;
+    width: auto;
+    height: auto;
     display: block;
     object-fit: contain;
 }
