@@ -28,10 +28,12 @@ async function loginWithGoogle() {
     }
     const provider = new firebase.auth.GoogleAuthProvider();
     try {
-        await auth.signInWithPopup(provider);
+        // En móviles o Safari, Popup suele fallar por los bloqueadores integrados.
+        // Redirect es el estándar seguro para Web Apps.
+        await auth.signInWithRedirect(provider);
     } catch (error) {
         console.error("Error en login:", error);
-        alert("No se pudo iniciar sesión. Revisa las popups del navegador.");
+        alert("No se pudo iniciar sesión. Código: " + error.code);
     }
 }
 
@@ -49,6 +51,17 @@ if (auth && db) {
     // ─── LÓGICA DE AUTH ────────────────────────────────────────────────
 
     // Escuchar cambios de estado del usuario
+    auth.getRedirectResult().then((result) => {
+        if (result.credential) {
+            console.log("Login por redirección exitoso.");
+        }
+    }).catch((error) => {
+        console.error("Error tras redirección:", error);
+        if (error.code !== 'auth/redirect-cancelled-by-user') {
+            alert("Error al volver de Google: " + error.message);
+        }
+    });
+
     auth.onAuthStateChanged(async (user) => {
         if (user) {
             console.log("Usuario identificado:", user.email);
