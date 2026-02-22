@@ -22,9 +22,29 @@ class Trie {
     }
 }
 
+const apalabradosLayout = [
+    [0, 0, 4, 0, 2, 0, 0, 0, 0, 0, 2, 0, 4, 0, 0],
+    [0, 2, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 2, 0],
+    [4, 0, 1, 0, 0, 0, 2, 0, 2, 0, 0, 0, 1, 0, 4],
+    [0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 2, 0, 0, 0],
+    [2, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 2],
+    [0, 3, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 3, 0],
+    [0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 1, 0, 2, 0, 0],
+    [0, 0, 0, 3, 0, 0, 0, 5, 0, 0, 0, 3, 0, 0, 0],
+    [0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 1, 0, 2, 0, 0],
+    [0, 3, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 3, 0],
+    [2, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 2],
+    [0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 2, 0, 0, 0],
+    [4, 0, 1, 0, 0, 0, 2, 0, 2, 0, 0, 0, 1, 0, 4],
+    [0, 2, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 2, 0],
+    [0, 0, 4, 0, 2, 0, 0, 0, 0, 0, 2, 0, 4, 0, 0]
+];
+
 class Solver {
     constructor(boardLayout, letterPoints) {
-        this.boardLayout = boardLayout;
+        // En forzamos usar siempre el layout de Apalabrados independientemente de lo que se pase,
+        // aunque idealmente lo pasamos desde frontend
+        this.boardLayout = boardLayout || apalabradosLayout;
         this.letterPoints = letterPoints;
         this.trie = new Trie();
         this.dictionary = new Set();
