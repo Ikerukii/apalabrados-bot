@@ -429,6 +429,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
         resultsPanel.classList.remove('hidden');
+
+        // Auto-scroll a resultados si es mobile o si están fuera de vista
+        setTimeout(() => {
+            resultsPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
     }
 
     function previewMove(move) {

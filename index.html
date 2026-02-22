@@ -60,107 +60,92 @@
             <p>Haz clic en cualquier casilla y teclea para replicar las jugadas de tu rival.<br>Usa <b>Shift + Letra</b>
                 para colocar el comodín del oponente (0 puntos).</p>
         </header>
-        <main>
-            <div id="board" class="board"></div>
+        <main class="main-dashboard">
+            <div class="left-column">
+                <div id="board" class="board"></div>
+                <div class="legend-compact">
+                    <div class="legend-item"><span class="legend-color dl"></span><span>DL</span></div>
+                    <div class="legend-item"><span class="legend-color tl"></span><span>TL</span></div>
+                    <div class="legend-item"><span class="legend-color dp"></span><span>DP</span></div>
+                    <div class="legend-item"><span class="legend-color tp"></span><span>TP</span></div>
+                </div>
+            </div>
 
-            <div class="solver-panel">
-                <div class="rack-container">
-                    <h3>Tu Atril</h3>
-                    <div id="rack" class="rack">
-                        <input type="text" class="rack-input" maxlength="1" data-index="0">
-                        <input type="text" class="rack-input" maxlength="1" data-index="1">
-                        <input type="text" class="rack-input" maxlength="1" data-index="2">
-                        <input type="text" class="rack-input" maxlength="1" data-index="3">
-                        <input type="text" class="rack-input" maxlength="1" data-index="4">
-                        <input type="text" class="rack-input" maxlength="1" data-index="5">
-                        <input type="text" class="rack-input" maxlength="1" data-index="6">
+            <div class="right-column">
+                <div class="solver-panel">
+                    <div class="rack-container">
+                        <h3>Tu Atril</h3>
+                        <div id="rack" class="rack">
+                            <input type="text" class="rack-input" maxlength="1" data-index="0">
+                            <input type="text" class="rack-input" maxlength="1" data-index="1">
+                            <input type="text" class="rack-input" maxlength="1" data-index="2">
+                            <input type="text" class="rack-input" maxlength="1" data-index="3">
+                            <input type="text" class="rack-input" maxlength="1" data-index="4">
+                            <input type="text" class="rack-input" maxlength="1" data-index="5">
+                            <input type="text" class="rack-input" maxlength="1" data-index="6">
+                        </div>
+                        <p class="rack-hint">Usa '*' para el comodín vacío.</p>
                     </div>
-                    <p class="rack-hint">Usa '*' para el comodín vacío.</p>
-                </div>
-                <div style="display: flex; gap: 10px; width: 100%;">
-                    <button id="solve-btn" class="solve-btn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-                        </svg>
-                        Calcular Mejor Jugada
-                    </button>
-                    <button id="clear-board-btn" class="clear-btn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="3 6 5 6 21 6"></polyline>
-                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
-                            </path>
-                        </svg>
-                        Vaciar
-                    </button>
+
+                    <div class="action-buttons">
+                        <button id="solve-btn" class="solve-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                            </svg>
+                            Calcular
+                        </button>
+                        <button id="import-board-btn" class="import-btn" title="Cargar imagen">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                        </button>
+                        <button id="clear-board-btn" class="clear-btn" title="Vaciar tablero">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path
+                                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+
                     <input type="file" id="import-board-input" accept="image/*" style="display: none;">
-                    <button id="import-board-btn" class="import-btn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                            <polyline points="21 15 16 10 5 21"></polyline>
-                        </svg>
-                        Escanear
-                    </button>
+
+                    <div id="ocr-status" class="ocr-status hidden">
+                        <div class="ocr-spinner"></div>
+                        <span id="ocr-status-text">Analizando...</span>
+                    </div>
+
+                    <!-- OCR interactivos dentro del panel -->
+                    <div id="ocr-controls" class="hidden">
+                        <div class="ocr-sliders">
+                            <label>Zoom: <input type="range" id="ocr-zoom" min="60" max="130" value="98"></label>
+                            <label>X: <input type="range" id="ocr-x" min="-100" max="100" value="0"></label>
+                            <label>Y: <input type="range" id="ocr-y" min="-100" max="100" value="0"></label>
+                        </div>
+                        <button id="ocr-start-btn" class="solve-btn ocr-confirm-btn">Confirmar OCR</button>
+                    </div>
                 </div>
 
-                <div id="ocr-status" class="ocr-status hidden">
-                    <div class="ocr-spinner"></div>
-                    <span id="ocr-status-text">Analizando tablero...</span>
+                <div id="results-panel" class="results-panel hidden">
+                    <div class="panel-header">
+                        <h3>Mejores Jugadas</h3>
+                    </div>
+                    <ul id="results-list" class="results-list"></ul>
                 </div>
             </div>
 
-            <!-- Canvas y Controles OCR interactivos -->
-            <div id="ocr-controls" class="hidden"
-                style="margin-top: 15px; padding: 15px; background: #f8fafc; border: 2px solid #cbd5e1; border-radius: 8px;">
-                <h4 style="margin: 0 0 10px 0; color: #334155; text-align: center;">Ajusta la cuadrícula roja a las
-                    fichas</h4>
-
-                <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;">
-                    <label
-                        style="display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; font-weight: 600; color: #475569;">
-                        Zoom Tablero:
-                        <input type="range" id="ocr-zoom" min="60" max="130" value="98" style="width: 60%;">
-                    </label>
-                    <label
-                        style="display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; font-weight: 600; color: #475569;">
-                        Mover ↔ (X):
-                        <input type="range" id="ocr-x" min="-100" max="100" value="0" style="width: 60%;">
-                    </label>
-                    <label
-                        style="display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; font-weight: 600; color: #475569;">
-                        Mover ↕ (Y):
-                        <input type="range" id="ocr-y" min="-100" max="100" value="0" style="width: 60%;">
-                    </label>
-                </div>
-
-                <button id="ocr-start-btn" class="solve-btn"
-                    style="width: 100%; justify-content: center; background: #4CAF50;">
-                    ✅ Cuadrícula perfecta, ¡Escanear letras!
-                </button>
-            </div>
-
-            <canvas id="ocr-canvas"
-                style="display:none; max-width: 100%; border: 2px solid #1E88E5; border-radius: 8px; margin-top: 15px;"></canvas>
-
-            <div id="results-panel" class="results-panel hidden">
-                <h3>Mejores Jugadas</h3>
-                <ul id="results-list" class="results-list"></ul>
-            </div>
+            <canvas id="ocr-canvas" style="display:none;"></canvas>
         </main>
         <footer>
-            <div class="legend">
-                <div class="legend-item"><span class="legend-color dl"></span><span>Doble Letra</span></div>
-                <div class="legend-item"><span class="legend-color tl"></span><span>Triple Letra</span></div>
-                <div class="legend-item"><span class="legend-color dp"></span><span>Doble Palabra</span></div>
-                <div class="legend-item"><span class="legend-color tp"></span><span>Triple Palabra</span></div>
-            </div>
-            <div style="text-align:center; margin-top:16px; font-size:0.78rem; color:#94a3b8;">
-                <a href="/privacy.html" style="color:#94a3b8; margin-right:16px;">Política de Privacidad</a>
-                <a href="/terms.html" style="color:#94a3b8; margin-right:16px;">Términos de Uso</a>
-                <span>&copy; 2025 Apalabrados Bot</span>
+            <div style="text-align:center; font-size:0.75rem; color:#94a3b8;">
+                <a href="/privacy.html" style="color:#94a3b8; margin-right:12px; text-decoration: none;">Privacidad</a>
+                <a href="/terms.html" style="color:#94a3b8; margin-right:12px; text-decoration: none;">Términos</a>
+                <span>&copy; 2026 Apalabrados Bot</span>
             </div>
         </footer>
     </div>
