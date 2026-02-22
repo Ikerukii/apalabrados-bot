@@ -9,7 +9,7 @@
     const USAGE_KEY = 'apalabrados_daily';
     const FREE_LIMIT = 5;
     // ---- ID de Google AdSense (sustituir cuando tengas aprobación) ----
-    const ADSENSE_CLIENT = 'ca-pub-XXXXXXXXXXXXXXXX';
+    const ADSENSE_CLIENT = 'ca-pub-4577641786728311';
     const ADSENSE_SLOT_BANNER = '1234567890';
 
     // ─── Utilidades de uso ───────────────────────────────────────────
