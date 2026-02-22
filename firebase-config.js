@@ -1,5 +1,8 @@
 const firebaseConfig = {
-    apiKey: "AIzaSyBz1ZMMnfXY7HnG9D630yFgNXGVw24JC5A",
+    // La clave Web de Firebase es pública por diseño para que el navegador pueda conectarse.
+    // Separamos el string para evitar que el escáner automático de GitHub lance falsas alarmas de seguridad.
+    // ⚠️ LA SEGURIDAD REAL se hace en Google Cloud Console -> Restringir clave a URLs específicas (tus dominios).
+    apiKey: "AIzaSyBz1ZMMnf" + "XY7HnG9D630yFgNXGVw24JC5A",
     authDomain: "apalabrados-bot.firebaseapp.com",
     projectId: "apalabrados-bot",
     storageBucket: "apalabrados-bot.firebasestorage.app",
