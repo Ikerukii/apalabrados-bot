@@ -12,6 +12,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 from fastapi import FastAPI, Request, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 # ── FIREBASE ADMIN ────────────────────────────────────────────────────────────
 # En Railway usaremos la variable de entorno FIREBASE_SERVICE_ACCOUNT (JSON string)
