@@ -20,29 +20,33 @@ try {
 // Elementos de la UI
 const userProfileContainer = document.getElementById('user-profile');
 
+// Funciones Globales para UI y Scripts
+async function loginWithGoogle() {
+    if (!auth) {
+        alert("Firebase no está conectado aún. Por favor, recarga la página.");
+        return;
+    }
+    const provider = new firebase.auth.GoogleAuthProvider();
+    try {
+        await auth.signInWithPopup(provider);
+    } catch (error) {
+        console.error("Error en login:", error);
+        alert("No se pudo iniciar sesión. Revisa las popups del navegador.");
+    }
+}
+
+async function logout() {
+    if (!auth) return;
+    try {
+        await auth.signOut();
+        window.location.reload();
+    } catch (error) {
+        console.error("Error en logout:", error);
+    }
+}
+
 if (auth && db) {
     // ─── LÓGICA DE AUTH ────────────────────────────────────────────────
-
-    // Login con Google
-    async function loginWithGoogle() {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        try {
-            await auth.signInWithPopup(provider);
-        } catch (error) {
-            console.error("Error en login:", error);
-            alert("No se pudo iniciar sesión. Revisa las popups del navegador.");
-        }
-    }
-
-    // Logout
-    async function logout() {
-        try {
-            await auth.signOut();
-            window.location.reload(); // Recargar para limpiar estado
-        } catch (error) {
-            console.error("Error en logout:", error);
-        }
-    }
 
     // Escuchar cambios de estado del usuario
     auth.onAuthStateChanged(async (user) => {
@@ -98,12 +102,13 @@ if (auth && db) {
 
 function renderLoginButton() {
     userProfileContainer.innerHTML = `
-        <button id="login-btn" class="login-btn">
+        <button id="login-btn" class="login-btn" onclick="if(window.FirebaseAuth) window.FirebaseAuth.loginWithGoogle()">
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" alt="G">
             Entrar con Google
         </button>
     `;
-    document.getElementById('login-btn').addEventListener('click', loginWithGoogle);
+    const btn = document.getElementById('login-btn');
+    if (btn) btn.addEventListener('click', loginWithGoogle);
 }
 
 function updateUserUI(user, isPremium) {
