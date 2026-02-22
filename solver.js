@@ -306,9 +306,7 @@ class Solver {
 
             if (!isNewlyPlaced) {
                 // Pre-existing tile: use its actual points on the board, so opponent wildcards (0) stay 0
-                let origR = dir === 'H' ? row : c;
-                let origC = dir === 'H' ? c : row;
-                let existingPoints = board[origR][origC].points;
+                let existingPoints = board[row][c].points;
                 mainWordScore += existingPoints;
             } else {
                 // Newly placed tile gets multipliers
@@ -334,18 +332,14 @@ class Solver {
                 let tr = row - 1;
                 while (tr >= 0 && board[tr][c].letter) {
                     topWord = board[tr][c].letter + topWord;
-                    let origR = dir === 'H' ? tr : c;
-                    let origC = dir === 'H' ? c : tr;
-                    topScore += board[origR][origC].points;
+                    topScore += board[tr][c].points;
                     tr--;
                 }
 
                 let br = row + 1;
                 while (br < 15 && board[br][c].letter) {
                     bottomWord += board[br][c].letter;
-                    let origR = dir === 'H' ? br : c;
-                    let origC = dir === 'H' ? c : br;
-                    bottomScore += board[origR][origC].points;
+                    bottomScore += board[br][c].points;
                     br++;
                 }
 
