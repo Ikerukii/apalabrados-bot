@@ -26,6 +26,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <!-- Google Analytics: sustituye G-XXXXXXXXXX por tu Measurement ID real -->
+    <!-- Para obtenerlo: analytics.google.com → Crear propiedad → GA4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
 </head>
 
 <body>
@@ -131,6 +140,11 @@
                 <div class="legend-item"><span class="legend-color tl"></span><span>Triple Letra</span></div>
                 <div class="legend-item"><span class="legend-color dp"></span><span>Doble Palabra</span></div>
                 <div class="legend-item"><span class="legend-color tp"></span><span>Triple Palabra</span></div>
+            </div>
+            <div style="text-align:center; margin-top:16px; font-size:0.78rem; color:#94a3b8;">
+                <a href="/privacy.html" style="color:#94a3b8; margin-right:16px;">Política de Privacidad</a>
+                <a href="/terms.html" style="color:#94a3b8; margin-right:16px;">Términos de Uso</a>
+                <span>&copy; 2025 Apalabrados Bot</span>
             </div>
         </footer>
     </div>
