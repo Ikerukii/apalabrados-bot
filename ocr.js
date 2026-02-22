@@ -11,7 +11,6 @@ class BoardOCR {
         this.statusText = document.getElementById('ocr-status-text');
         this.spinner = this.statusEl.querySelector('.ocr-spinner');
 
-        this.modalEl = document.getElementById('ocr-modal');
         this.controlsEl = document.getElementById('ocr-controls');
         this.zoomInput = document.getElementById('ocr-zoom');
         this.xInput = document.getElementById('ocr-x');
@@ -57,24 +56,16 @@ class BoardOCR {
 
         if (this.startBtn) {
             this.startBtn.addEventListener('click', () => {
-                this.hideModal();
+                this.controlsEl.classList.add('hidden');
                 this.scanGrid();
             });
         }
 
         if (this.cancelBtn) {
             this.cancelBtn.addEventListener('click', () => {
-                this.hideModal();
+                this.controlsEl.classList.add('hidden');
             });
         }
-    }
-
-    showModal() {
-        if (this.modalEl) this.modalEl.classList.remove('hidden');
-    }
-
-    hideModal() {
-        if (this.modalEl) this.modalEl.classList.add('hidden');
     }
 
     setStatus(message, isError = false) {
@@ -128,7 +119,7 @@ class BoardOCR {
             this.xInput.value = 0;
             this.yInput.value = 0;
 
-            this.showModal();
+            this.controlsEl.classList.remove('hidden');
             this.hideStatus();
 
             this.drawGrid();

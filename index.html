@@ -116,28 +116,12 @@
                         <div class="ocr-spinner"></div>
                         <span id="ocr-status-text">Analizando...</span>
                     </div>
-                </div>
 
-                <div id="results-panel" class="results-panel hidden">
-                    <div class="panel-header">
-                        <h3>Mejores Jugadas</h3>
-                    </div>
-                    <ul id="results-list" class="results-list"></ul>
-                </div>
-            </div>
-
-            <!-- OCR Modal -->
-            <div id="ocr-modal" class="limit-modal hidden">
-                <div class="limit-modal-card ocr-modal-card">
-                    <div class="panel-header">
-                        <h3>Ajustar captura de pantalla</h3>
-                    </div>
-
-                    <div class="ocr-preview-container">
-                        <canvas id="ocr-canvas"></canvas>
-                    </div>
-
-                    <div id="ocr-controls" class="ocr-modal-controls">
+                    <!-- OCR interactivos dentro del panel -->
+                    <div id="ocr-controls" class="hidden">
+                        <div class="ocr-preview-inline">
+                            <canvas id="ocr-canvas"></canvas>
+                        </div>
                         <div class="ocr-sliders">
                             <div class="slider-group">
                                 <label>Zoom</label>
@@ -152,22 +136,31 @@
                                 <input type="range" id="ocr-y" min="-100" max="100" value="0">
                             </div>
                         </div>
-
-                        <div class="limit-modal-actions">
-                            <button id="ocr-start-btn" class="limit-modal-premium">Confirmar y Escanear</button>
-                            <button id="ocr-cancel-btn" class="limit-modal-dismiss">Cancelar</button>
+                        <div class="action-row-buttons" style="margin-top: 10px;">
+                            <button id="ocr-start-btn" class="solve-btn" style="flex: 2;">Confirmar y Escanear</button>
+                            <button id="ocr-cancel-btn" class="clear-btn" style="flex: 1; font-size: 0.9rem;"
+                                title="Cancelar">Cancelar</button>
                         </div>
                     </div>
                 </div>
+
+                <div id="results-panel" class="results-panel hidden">
+                    <div class="panel-header">
+                        <h3>Mejores Jugadas</h3>
+                    </div>
+                    <ul id="results-list" class="results-list"></ul>
+                </div>
             </div>
-        </main>
-        <footer>
-            <div style="text-align:center; font-size:0.75rem; color:#94a3b8;">
-                <a href="/privacy.html" style="color:#94a3b8; margin-right:12px; text-decoration: none;">Privacidad</a>
-                <a href="/terms.html" style="color:#94a3b8; margin-right:12px; text-decoration: none;">Términos</a>
-                <span>&copy; 2026 Apalabrados Bot</span>
-            </div>
-        </footer>
+
+    </div>
+    </main>
+    <footer>
+        <div style="text-align:center; font-size:0.75rem; color:#94a3b8;">
+            <a href="/privacy.html" style="color:#94a3b8; margin-right:12px; text-decoration: none;">Privacidad</a>
+            <a href="/terms.html" style="color:#94a3b8; margin-right:12px; text-decoration: none;">Términos</a>
+            <span>&copy; 2026 Apalabrados Bot</span>
+        </div>
+    </footer>
     </div>
     <!-- monetization.js: debe cargarse primero para que UsageTracker esté disponible -->
     <script src="firebase-config.js?v=3"></script>
