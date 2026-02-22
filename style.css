@@ -763,7 +763,8 @@ p {
 
 .ocr-preview-container {
     flex: 1;
-    min-height: 200px;
+    min-height: 300px;
+    /* Un poco más de espacio inicial */
     background: #000;
     border-radius: 12px;
     overflow: hidden;
@@ -771,11 +772,13 @@ p {
     align-items: center;
     justify-content: center;
     border: 2px solid #e2e8f0;
+    position: relative;
 }
 
 #ocr-canvas {
     max-width: 100%;
     max-height: 100%;
+    display: block;
     object-fit: contain;
 }
 
