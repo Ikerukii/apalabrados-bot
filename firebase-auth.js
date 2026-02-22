@@ -54,7 +54,7 @@ if (auth && db) {
 
             // 👑 Acceso Administrador / Creador
             // Sustituye el correo de abajo por el tuyo real de Google
-            const adminEmails = ["tu_correo_real_aqui@gmail.com"];
+            const adminEmails = ["ifernandezillera@gmail.com"];
             if (adminEmails.includes(user.email)) {
                 isPremium = true;
             }
