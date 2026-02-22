@@ -37,11 +37,20 @@ async function loginWithGoogle() {
     provider.setCustomParameters({
         prompt: 'select_account'
     });
+
     try {
         await auth.signInWithPopup(provider);
     } catch (error) {
-        console.error("Error en login:", error);
-        alert(`Fallo en login:\nMotivo: ${error.message}\nCódigo: ${error.code}`);
+        if (error.code === 'auth/popup-blocked') {
+            console.warn("Popup blocked by browser. Falling back to redirect...");
+            // Usar sessionStorage para recordar que estamos volviendo de un login
+            sessionStorage.setItem('authRedirectPending', 'true');
+            // Lanzar redirección a pantalla completa
+            auth.signInWithRedirect(provider);
+        } else {
+            console.error("Error en login:", error);
+            alert(`Fallo en login:\nMotivo: ${error.message}\nCódigo: ${error.code}`);
+        }
     } finally {
         if (btn) {
             btn.disabled = false;
@@ -62,6 +71,20 @@ async function logout() {
 
 if (auth && db) {
     // ─── LÓGICA DE AUTH ────────────────────────────────────────────────
+
+    // Recuperar resultado en caso de haber un redirect pendiente
+    auth.getRedirectResult().then((result) => {
+        if (result && result.user) {
+            console.log("Login mediante redirección completado.");
+            sessionStorage.removeItem('authRedirectPending');
+        }
+    }).catch((error) => {
+        console.error("Error tras redirección:", error);
+        sessionStorage.removeItem('authRedirectPending');
+        if (error.code !== 'auth/redirect-cancelled-by-user') {
+            alert("Error al volver de Google: " + error.message);
+        }
+    });
 
     // Escuchar cambios de estado del usuario
     auth.onAuthStateChanged(async (user) => {
