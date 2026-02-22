@@ -51,6 +51,14 @@ if (auth && db) {
 
             // 1. Obtener datos de Firestore (Premium status)
             let isPremium = false;
+
+            // 👑 Acceso Administrador / Creador
+            // Sustituye el correo de abajo por el tuyo real de Google
+            const adminEmails = ["tu_correo_real_aqui@gmail.com"];
+            if (adminEmails.includes(user.email)) {
+                isPremium = true;
+            }
+
             try {
                 const userDoc = await db.collection('users').doc(user.uid).get();
                 if (userDoc.exists) {
