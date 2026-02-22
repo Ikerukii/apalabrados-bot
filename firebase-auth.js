@@ -3,78 +3,88 @@
  * Apalabrados Bot
  */
 
-// Inicializar Firebase
-if (window.firebaseConfig) {
-    firebase.initializeApp(window.firebaseConfig);
-}
+// Inicializar Firebase de forma segura
+let auth = null;
+let db = null;
 
-const auth = firebase.auth();
-const db = firebase.firestore();
+try {
+    if (typeof firebase !== 'undefined' && window.firebaseConfig) {
+        firebase.initializeApp(window.firebaseConfig);
+        auth = firebase.auth();
+        db = firebase.firestore();
+    }
+} catch (e) {
+    console.warn("Fallo al inicializar Firebase SDK:", e);
+}
 
 // Elementos de la UI
 const userProfileContainer = document.getElementById('user-profile');
 
-// ─── LÓGICA DE AUTH ────────────────────────────────────────────────
+if (auth && db) {
+    // ─── LÓGICA DE AUTH ────────────────────────────────────────────────
 
-// Login con Google
-async function loginWithGoogle() {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    try {
-        await auth.signInWithPopup(provider);
-    } catch (error) {
-        console.error("Error en login:", error);
-        alert("No se pudo iniciar sesión. Revisa las popups del navegador.");
-    }
-}
-
-// Logout
-async function logout() {
-    try {
-        await auth.signOut();
-        window.location.reload(); // Recargar para limpiar estado
-    } catch (error) {
-        console.error("Error en logout:", error);
-    }
-}
-
-// Escuchar cambios de estado del usuario
-auth.onAuthStateChanged(async (user) => {
-    if (user) {
-        console.log("Usuario identificado:", user.email);
-
-        // 1. Obtener datos de Firestore (Premium status)
-        let isPremium = false;
+    // Login con Google
+    async function loginWithGoogle() {
+        const provider = new firebase.auth.GoogleAuthProvider();
         try {
-            const userDoc = await db.collection('users').doc(user.uid).get();
-            if (userDoc.exists) {
-                isPremium = userDoc.data().is_premium || false;
-            } else {
-                // Crear documento inicial si no existe
-                await db.collection('users').doc(user.uid).set({
-                    email: user.email,
-                    displayName: user.displayName,
-                    is_premium: false,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true });
-            }
-        } catch (e) {
-            console.warn("No se pudo acceder a Firestore (probablemente reglas de seguridad):", e);
-        }
-
-        // 2. Actualizar UI
-        updateUserUI(user, isPremium);
-
-        // 3. Informar al UsageTracker
-        if (window.UsageTracker) {
-            window.UsageTracker.setPremiumStatus(isPremium);
-        }
-    } else {
-        renderLoginButton();
-        if (window.UsageTracker) {
-            window.UsageTracker.setPremiumStatus(false);
+            await auth.signInWithPopup(provider);
+        } catch (error) {
+            console.error("Error en login:", error);
+            alert("No se pudo iniciar sesión. Revisa las popups del navegador.");
         }
     }
-});
+
+    // Logout
+    async function logout() {
+        try {
+            await auth.signOut();
+            window.location.reload(); // Recargar para limpiar estado
+        } catch (error) {
+            console.error("Error en logout:", error);
+        }
+    }
+
+    // Escuchar cambios de estado del usuario
+    auth.onAuthStateChanged(async (user) => {
+        if (user) {
+            console.log("Usuario identificado:", user.email);
+
+            // 1. Obtener datos de Firestore (Premium status)
+            let isPremium = false;
+            try {
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                if (userDoc.exists) {
+                    isPremium = userDoc.data().is_premium || false;
+                } else {
+                    // Crear documento inicial si no existe
+                    await db.collection('users').doc(user.uid).set({
+                        email: user.email,
+                        displayName: user.displayName,
+                        is_premium: false,
+                        modifiedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true });
+                }
+            } catch (e) {
+                console.warn("No se pudo acceder a Firestore (probablemente reglas de seguridad):", e);
+            }
+
+            // 2. Actualizar UI
+            updateUserUI(user, isPremium);
+
+            // 3. Informar al UsageTracker
+            if (window.UsageTracker) {
+                window.UsageTracker.setPremiumStatus(isPremium);
+            }
+        } else {
+            renderLoginButton();
+            if (window.UsageTracker) {
+                window.UsageTracker.setPremiumStatus(false);
+            }
+        }
+    });
+} else {
+    console.log("Autenticación no disponible.");
+}
 
 // ─── RENDERIZADO DE UI ─────────────────────────────────────────────
 

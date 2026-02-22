@@ -39,7 +39,13 @@ class Solver {
             const text = await response.text();
 
             const words = text.split('\n')
-                .map(w => w.trim().toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""))
+                .map(w => {
+                    // Normalizar acentos pero PRESERVAR la Ñ
+                    return w.trim().toUpperCase()
+                        .normalize("NFD")
+                        .replace(/[\u0300-\u0302\u0304-\u036f]/g, "") // Eliminar todo excepto tilde de la Ñ (\u0303)
+                        .normalize("NFC");
+                })
                 .filter(w => w.length >= 2 && /^[A-ZÑ]+$/.test(w));
 
             for (let word of words) {
