@@ -106,32 +106,10 @@ class BoardOCR {
         this.setStatus('Cargando imagen para ajuste manual...');
         this.img = new Image();
         this.img.onload = () => {
-            // Mostrar modal antes para obtener el tamaño real del contenedor
-            this.showModal();
-            this.hideStatus();
+            this.canvas.width = this.img.width;
+            this.canvas.height = this.img.height;
 
-            const container = document.querySelector('.ocr-preview-container');
-            const maxWidth = container.clientWidth || 600;
-            const maxHeight = container.clientHeight || 400;
-
-            // Calcular factor de escala para que la imagen encaje en el modal
-            let scale = 1;
-            if (this.img.width > maxWidth || this.img.height > maxHeight) {
-                const scaleX = maxWidth / this.img.width;
-                const scaleY = maxHeight / this.img.height;
-                scale = Math.min(scaleX, scaleY) * 0.95; // 95% para dejar un pequeño margen extra
-            }
-
-            // Si la imagen es más pequeña que el contenedor, no la agrandamos para no perder calidad
-            if (scale > 1) scale = 1;
-
-            this.canvas.width = this.img.width * scale;
-            this.canvas.height = this.img.height * scale;
-
-            // Guardamos el factor de escala visual para aplicarlo a la cuadrícula y al OCR
-            this.renderScale = scale;
-
-            // Heurística simple para primera aproximación (referida a la imagen original)
+            // Heurística simple para primera aproximación
             if (Math.abs(this.img.width - this.img.height) < 50) {
                 this.baseBoardSize = Math.min(this.img.width, this.img.height);
                 this.baseStartX = (this.img.width - this.baseBoardSize) / 2;
@@ -149,6 +127,9 @@ class BoardOCR {
             this.zoomInput.value = 98; // Asumimos un 2% de margen típico de Apalabrados
             this.xInput.value = 0;
             this.yInput.value = 0;
+
+            this.showModal();
+            this.hideStatus();
 
             this.drawGrid();
 
@@ -182,23 +163,21 @@ class BoardOCR {
     drawGrid() {
         if (!this.img) return;
 
-        // Dibujar imagen escalada
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.drawImage(this.img, 0, 0, this.canvas.width, this.canvas.height);
+        // Redibujar la imagen limpia original
+        this.ctx.drawImage(this.img, 0, 0);
 
         const { targetStartX, targetStartY, cellSize, displayMargin } = this.getAdjustedParams();
         const drawSize = cellSize - (displayMargin * 2);
 
-        // Dibujar cuadrícula aplicando el escalado visual a las coordenadas base
+        // Dibujar el overlay de los 225 cuadritos rojos (margen visual = 0 → rejilla sólida)
         this.ctx.strokeStyle = '#ff0000';
-        this.ctx.lineWidth = Math.max(1, this.canvas.width / 600);
+        this.ctx.lineWidth = Math.max(1, this.img.width / 600);
 
         for (let r = 0; r < 15; r++) {
             for (let c = 0; c < 15; c++) {
-                const x = (targetStartX + (c * cellSize)) * this.renderScale;
-                const y = (targetStartY + (r * cellSize)) * this.renderScale;
-                const size = drawSize * this.renderScale;
-                this.ctx.strokeRect(x + (displayMargin * this.renderScale), y + (displayMargin * this.renderScale), size, size);
+                const x = targetStartX + (c * cellSize);
+                const y = targetStartY + (r * cellSize);
+                this.ctx.strokeRect(x + displayMargin, y + displayMargin, drawSize, drawSize);
             }
         }
     }
@@ -210,9 +189,8 @@ class BoardOCR {
         this.setStatus('Extrayendo y procesando casillas (0/225)...');
         document.getElementById('clear-board-btn').click();
 
-        // Imagen limpia sin la cuadrícula roja pero escalada
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.drawImage(this.img, 0, 0, this.canvas.width, this.canvas.height);
+        // Imagen limpia sin la cuadrícula roja
+        this.ctx.drawImage(this.img, 0, 0);
 
         const { targetStartX, targetStartY, cellSize, cropMargin, cropSize } = this.getAdjustedParams();
         let recognizedCount = 0;
@@ -220,17 +198,12 @@ class BoardOCR {
         try {
             for (let r = 0; r < 15; r++) {
                 for (let c = 0; c < 15; c++) {
-                    // Calculamos las coordenadas x,y aplicando el mismo renderScale que usa drawGrid
-                    const x = (targetStartX + (c * cellSize)) * this.renderScale;
-                    const y = (targetStartY + (r * cellSize)) * this.renderScale;
-                    const scaledCropMargin = cropMargin * this.renderScale;
-                    const scaledCropSize = cropSize * this.renderScale;
+                    const x = targetStartX + (c * cellSize);
+                    const y = targetStartY + (r * cellSize);
 
                     const rawData = this.ctx.getImageData(
-                        Math.max(0, Math.round(x + scaledCropMargin)),
-                        Math.max(0, Math.round(y + scaledCropMargin)),
-                        Math.max(1, Math.round(scaledCropSize)),
-                        Math.max(1, Math.round(scaledCropSize))
+                        Math.round(x + cropMargin), Math.round(y + cropMargin),
+                        Math.round(cropSize), Math.round(cropSize)
                     );
 
                     if (this.isCellEmpty(rawData)) continue;
