@@ -2,3 +2,5 @@ fastapi
 uvicorn[standard]
 aiofiles
 python-multipart
+firebase-admin
+stripe

@@ -12,6 +12,9 @@
     const ADSENSE_CLIENT = 'ca-pub-4577641786728311';
     const ADSENSE_SLOT_BANNER = '1234567890';
 
+    let _isPremium = false; // Estado global de premium
+
+
     // ─── Utilidades de uso ───────────────────────────────────────────
 
     function _getToday() {
@@ -48,6 +51,7 @@
     }
 
     function isLimitReached() {
+        if (_isPremium) return false;
         return _loadUsage().count >= FREE_LIMIT;
     }
 
@@ -69,6 +73,13 @@
         if (!el) return;
         const count = getUsageCount();
         const remaining = Math.max(0, FREE_LIMIT - count);
+
+        if (_isPremium) {
+            el.textContent = '🚀 Plan Premium Activo — Sin límites';
+            el.style.color = '#7c3aed';
+            return;
+        }
+
         el.textContent = remaining === 0
             ? '⚠️ Sin análisis gratuitos hoy'
             : `${remaining} análisis gratuito${remaining === 1 ? '' : 's'} restante${remaining === 1 ? '' : 's'} hoy`;
@@ -107,17 +118,22 @@
                 <p>Los usuarios gratuitos disponen de <strong>${FREE_LIMIT} análisis por día</strong>.<br>
                 Los análisis se reinician cada medianoche.</p>
                 <div class="limit-modal-actions">
-                    <button class="limit-modal-premium" onclick="window.open('#', '_blank')">
-                        🚀 Ir a Premium — ilimitado por 2,99&nbsp;€/mes
+                    <button id="modal-premium-btn" class="limit-modal-premium">
+                        🚀 Quitar límites (Premium) — 2,99&nbsp;€
                     </button>
                     <button class="limit-modal-dismiss" onclick="window.UsageTracker.hideModal()">
                         Vuelvo mañana
                     </button>
                 </div>
-                <p class="limit-modal-note">Con Premium: sin límites, sin publicidad.</p>
+                <p class="limit-modal-note">Sin suscripciones recurrentes. Pago único.</p>
             </div>
         `;
         document.body.appendChild(modal);
+
+        // Evento para el botón premium
+        modal.querySelector('#modal-premium-btn').addEventListener('click', () => {
+            alert("Abre Stripe Checkout (Fase 2 de implementación)");
+        });
 
         // Cerrar al hacer clic fuera
         modal.addEventListener('click', (e) => {
@@ -146,6 +162,8 @@
     }
 
     function _injectAdBanner() {
+        if (_isPremium) return; // No inyectar si ya es premium
+
         // Banner debajo del panel de solver
         const targetPanel = document.querySelector('.solver-panel');
         if (!targetPanel || document.getElementById('ad-banner-main')) return;
@@ -184,6 +202,15 @@
         getLimit: () => FREE_LIMIT,
         showModal: showLimitModal,
         hideModal: hideLimitModal,
+        setPremiumStatus: (status) => {
+            _isPremium = status;
+            _updateCounterUI();
+            if (status) {
+                // Quitar anuncios si se vuelve premium en caliente
+                document.getElementById('ad-banner-main')?.remove();
+                hideLimitModal();
+            }
+        }
     };
 
     init();
