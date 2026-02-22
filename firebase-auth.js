@@ -26,6 +26,13 @@ async function loginWithGoogle() {
         alert("Firebase no está conectado aún. Por favor, recarga la página.");
         return;
     }
+
+    const btn = document.getElementById('login-btn');
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '⏳ Cargando...';
+    }
+
     const provider = new firebase.auth.GoogleAuthProvider();
     provider.setCustomParameters({
         prompt: 'select_account'
@@ -35,6 +42,11 @@ async function loginWithGoogle() {
     } catch (error) {
         console.error("Error en login:", error);
         alert(`Fallo en login:\nMotivo: ${error.message}\nCódigo: ${error.code}`);
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            renderLoginButton(); // Restore original appearance
+        }
     }
 }
 
