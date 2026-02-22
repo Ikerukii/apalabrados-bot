@@ -131,8 +131,37 @@
         document.body.appendChild(modal);
 
         // Evento para el botón premium
-        modal.querySelector('#modal-premium-btn').addEventListener('click', () => {
-            alert("Abre Stripe Checkout (Fase 2 de implementación)");
+        modal.querySelector('#modal-premium-btn').addEventListener('click', async () => {
+            const user = window.FirebaseAuth ? window.FirebaseAuth.getCurrentUser() : null;
+            if (!user) {
+                alert("Debes iniciar sesión con Google (arriba a la derecha) antes de hacerte Premium.");
+                return;
+            }
+
+            const btn = modal.querySelector('#modal-premium-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳ Cargando pago...';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch('/create-checkout-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ uid: user.uid })
+                });
+
+                if (!response.ok) throw new Error('Error al conectar con el servidor de pagos');
+
+                const data = await response.json();
+                if (data.url) {
+                    window.location.href = data.url;
+                }
+            } catch (err) {
+                console.error(err);
+                alert("No se pudo iniciar el proceso de pago. Inténtalo de nuevo.");
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
         });
 
         // Cerrar al hacer clic fuera

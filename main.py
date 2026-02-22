@@ -13,6 +13,7 @@ from firebase_admin import credentials, firestore
 from fastapi import FastAPI, Request, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
 
 # ── FIREBASE ADMIN ────────────────────────────────────────────────────────────
 # En Railway usaremos la variable de entorno FIREBASE_SERVICE_ACCOUNT (JSON string)
@@ -45,6 +46,31 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# ── STRIPE CHECKOUT ───────────────────────────────────────────────────────────
+class CheckoutRequest(BaseModel):
+    uid: str
+
+@app.post("/create-checkout-session")
+async def create_checkout_session(req: CheckoutRequest):
+    price_id = os.environ.get("STRIPE_PRICE_ID")
+    if not price_id:
+        raise HTTPException(status_code=500, detail="Stripe price ID no configurado en el servidor")
+    
+    try:
+        session = stripe.checkout.Session.create(
+            line_items=[{
+                'price': price_id,
+                'quantity': 1,
+            }],
+            mode='payment', # Cambiar a 'subscription' si es recurrente
+            success_url="https://apalabrados-bot.up.railway.app/?payment=success",
+            cancel_url="https://apalabrados-bot.up.railway.app/?payment=canceled",
+            client_reference_id=req.uid,
+        )
+        return {"url": session.url}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 # ── WEBHOOK ───────────────────────────────────────────────────────────────────
 @app.post("/webhook/stripe")
