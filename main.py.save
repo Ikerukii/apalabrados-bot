@@ -1,0 +1,14 @@
+            formData.append('file', input.files[0]);
+
+            resText.innerText = "Analizando tablero...";
+
+            const response = await fetch('http://127.0.0.1:8000/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            resText.innerText = `Mejor jugada: ${data.palabra} (${data.puntos} pts) en ${data.posicion}`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+INSTRUCCIONES PARA EJECUTAR EL TABLERO DE APALABRADOS
+======================================================
+
+Esta aplicación funciona completamente en el navegador y utiliza archivos estáticos (HTML, CSS y JavaScript local).
+Sin embargo, debido a que carga un diccionario externo grande (`diccionario.txt`) mediante el uso de la función `fetch()` de JavaScript, la política de seguridad moderna de los navegadores web (CORS) bloquea la ejecución si abres el archivo `index.html` directamente haciendo doble clic sobre él (protocolo `file://`).
+
+Para que funcione correctamente, debe ser servido por un servidor web local (HTTP). Sigue estos sencillos pasos:
+
+OPCIÓN 1: Usando Python (Recomendado)
+--------------------------------------
+Casi todos los ordenadores Mac y Linux vienen con Python instalado de fábrica.
+1. Abre tu aplicación de Terminal.
+2. Navega hasta la carpeta donde se encuentra este proyecto:
+   cd /ruta/a/tu/carpeta/apalabrados-board
+3. Ejecuta el siguiente comando para iniciar un servidor local:
+   python3 -m http.server 8080
+4. Abre tu navegador web favorito (Chrome, Safari, Firefox, etc.) y visita:
+   http://localhost:8080
+
+
+OPCIÓN 2: Usando Node.js (Alternativa)
+----------------------------------------
+Si prefieres usar Node.js y tienes `npx` (o `npm`) instalado:
+1. Abre tu aplicación de Terminal.
+2. Navega hasta la carpeta del proyecto.
+3. Ejecuta un servidor HTTP rápido usando npx:
+   npx http-server -p 8080
+4. Abre tu navegador web en:
+   http://localhost:8080
+
+
+¡Eso es todo! El tablero calculará de inmediato las mejores jugadas de Apalabrados una vez que se cargue la página web.

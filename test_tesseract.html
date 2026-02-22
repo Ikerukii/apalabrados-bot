@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+</head>
+<body>
+    <script>
+        (async () => {
+            try {
+                const worker = await Tesseract.createWorker('spa');
+                await worker.terminate();
+                console.log("PASS: Tesseract loaded");
+            } catch(e) {
+                console.error("FAIL:", e);
+            }
+        })();
+    </script>
+</body>
+</html>
