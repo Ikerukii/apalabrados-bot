@@ -1,7 +1,7 @@
 :root {
     --bg-color: #0b0f19;
-    --board-bg: #f8fafc;
-    --cell-bg: #f8fafc;
+    --board-bg: #1e293b;
+    --cell-bg: #1e293b;
     --cell-border: #334155;
     --text-color: #f8fafc;
     --dl-color: #0ea5e9;
@@ -662,18 +662,18 @@ p {
     justify-content: space-between;
     align-items: center;
     padding: 14px 18px;
-    background: #f8fafc;
-    border: 1px solid #f1f5f9;
+    background: #1e293b;
+    border: 1px solid #334155;
     border-radius: 12px;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .result-item:hover {
-    border-color: #bfdbfe;
+    border-color: #8b5cf6;
     background: #0f172a;
     transform: translateX(4px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
 }
 
 .result-word {
