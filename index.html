@@ -21,7 +21,7 @@
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Apalabrados Bot">
     <meta name="twitter:description" content="Encuentra la mejor jugada en Apalabrados automáticamente.">
-    <link rel="stylesheet" href="style_pro.css?v=1">
+    <link rel="stylesheet" href="style_pro.css?v=2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -57,8 +57,9 @@
                     </button>
                 </div>
             </div>
-            <p>Haz clic en cualquier casilla y teclea para replicar las jugadas de tu rival.<br>Usa <b>Shift + Letra</b>
-                para colocar el comodín del oponente (0 puntos).</p>
+            <p>Seleccione cualquier celda e introduzca texto para replicar el tablero activo.<br>Emplee <b>Shift +
+                    Letra</b>
+                para asignar posiciones de comodín del adversario (0 puntos).</p>
         </header>
         <main class="main-dashboard">
             <div class="left-column">
@@ -68,7 +69,7 @@
             <div class="right-column">
                 <div class="solver-panel">
                     <div class="rack-container">
-                        <h3>Tu Atril</h3>
+                        <h3>Inventario de Fichas</h3>
                         <div id="rack" class="rack">
                             <input type="text" class="rack-input" maxlength="1" data-index="0">
                             <input type="text" class="rack-input" maxlength="1" data-index="1">
@@ -78,34 +79,19 @@
                             <input type="text" class="rack-input" maxlength="1" data-index="5">
                             <input type="text" class="rack-input" maxlength="1" data-index="6">
                         </div>
-                        <p class="rack-hint">Usa '*' para el comodín vacío.</p>
+                        <p class="rack-hint">Asigne el carácter '*' para representar espacios en blanco.</p>
                     </div>
 
                     <div class="action-buttons">
                         <button id="solve-btn" class="solve-btn">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-                            </svg>
-                            Calcular
+                            Computar Jugada Óptima
                         </button>
                         <div class="action-row-buttons">
                             <button id="import-board-btn" class="import-btn" title="Cargar imagen">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                    <polyline points="21 15 16 10 5 21"></polyline>
-                                </svg>
-                                Importar tablero desde foto
+                                Importar Captura
                             </button>
                             <button id="clear-board-btn" class="clear-btn" title="Vaciar tablero">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <polyline points="3 6 5 6 21 6"></polyline>
-                                    <path
-                                        d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
-                                    </path>
-                                </svg>
+                                Resetear Estado
                             </button>
                         </div>
                     </div>
