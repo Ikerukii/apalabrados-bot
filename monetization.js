@@ -75,13 +75,13 @@
         const remaining = Math.max(0, FREE_LIMIT - count);
 
         if (_isPremium) {
-            el.textContent = '🚀 Plan Premium Activo — Sin límites';
+            el.textContent = 'Plan Premium Activo — Accesos no limitados';
             el.style.color = '#7c3aed';
             return;
         }
 
         el.textContent = remaining === 0
-            ? '⚠️ Sin análisis gratuitos hoy'
+            ? 'Límite de análisis gratuitos alcanzado por hoy'
             : `${remaining} análisis gratuito${remaining === 1 ? '' : 's'} restante${remaining === 1 ? '' : 's'} hoy`;
         el.style.color = remaining <= 1 ? '#ef4444' : '#64748b';
     }
