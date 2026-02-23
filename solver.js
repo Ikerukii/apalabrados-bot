@@ -332,7 +332,7 @@ class Solver {
                 let tr = row - 1;
                 while (tr >= 0 && board[tr][c].letter) {
                     topWord = board[tr][c].letter + topWord;
-                    topScore += board[tr][c].points;
+                    topScore += board[tr][c].points; // Existing tiles keep their intrinsic points
                     tr--;
                 }
 
@@ -345,10 +345,14 @@ class Solver {
 
                 if (topWord.length > 0 || bottomWord.length > 0) {
                     // The perpendicular word uses this newly placed letter's tile value (with multiplier) 
-                    // and the new word multiplier.
+                    // and its OWN new word multiplier.
                     let crossWordScore = topScore + charScore + bottomScore;
-                    crossWordScore *= (cellType === 3 || cellType === 4 || cellType === 5) ? (cellType === 4 ? 3 : 2) : 1;
-                    totalScore += crossWordScore;
+                    let crossWordMultiplier = 1;
+
+                    if (cellType === 3 || cellType === 5) crossWordMultiplier *= 2; // DP or Star
+                    if (cellType === 4) crossWordMultiplier *= 3; // TP
+
+                    totalScore += (crossWordScore * crossWordMultiplier);
                 }
             }
         }
