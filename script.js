@@ -479,8 +479,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span class="result-word">${move.word}</span>
                         <span style="font-size:0.8rem; color:#64748b;">Fila ${move.r + 1}, Col ${move.c + 1} (${move.dir === 'H' ? 'Horizontal' : 'Vertical'})</span>
                     </div>
-                    <span class="result-score">${move.score} pts</span>
-                    <button class="apply-btn hidden" data-index="${index}">Aplicar</button>
+                    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
+                        <span class="result-score">${move.score} pts</span>
+                        <button class="apply-btn hidden" data-index="${index}">Aplicar</button>
+                        ${move.score >= 40 ? `<button class="whatsapp-share-btn hidden" onclick="event.stopPropagation(); window.open('https://wa.me/?text=' + encodeURIComponent('¡Apalabrados reventado! 🤯 Me acabo de sacar una jugada de ${move.score} puntazos (${move.word}). Encuentra palabras de reverso trucadas aquí: https://apalabrados-bot.up.railway.app'), '_blank')">WhatsApp</button>` : ''}
+                    </div>
                 `;
 
                 // Highlight en el tablero al hacer click
@@ -494,10 +497,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.querySelectorAll('.result-item').forEach(el => {
                         el.classList.remove('highlighted');
                         el.querySelector('.apply-btn')?.classList.add('hidden');
+                        el.querySelector('.whatsapp-share-btn')?.classList.add('hidden');
                     });
 
                     li.classList.add('highlighted');
                     li.querySelector('.apply-btn')?.classList.remove('hidden');
+                    li.querySelector('.whatsapp-share-btn')?.classList.remove('hidden');
 
                     currentPreviewMove = move;
                     previewMove(move);
