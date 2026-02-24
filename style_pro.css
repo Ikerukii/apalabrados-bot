@@ -1118,3 +1118,52 @@ p {
     width: 100%;
     accent-color: var(--primary);
 }
+
+/* ========================================================
+   SEO FAQ BLOCK
+   ======================================================== */
+.seo-faq {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.seo-faq h2 {
+    font-size: 1.1rem;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.seo-faq p {
+    font-size: 0.9rem;
+    color: #475569;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.seo-faq details {
+    background: rgba(255, 255, 255, 0.6);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #1e293b;
+}
+
+.seo-faq details summary {
+    font-weight: 600;
+    outline: none;
+}
+
+.seo-faq details p {
+    margin-top: 0.75rem;
+    margin-bottom: 0;
+    color: #475569;
+}
