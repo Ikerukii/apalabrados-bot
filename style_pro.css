@@ -777,22 +777,40 @@ p {
         font-size: 2rem;
     }
 
+    .app-container {
+        padding: 8px;
+    }
+
+    .board {
+        padding: 1px;
+        border-width: 2px;
+        width: 100%;
+        max-width: 100%;
+    }
+
     .cell {
-        font-size: 0.45rem;
+        font-size: 0.4rem;
+        border-width: 1px;
     }
 
     .cell.has-letter .letter {
-        font-size: 1rem;
+        font-size: 0.85rem;
+    }
+
+    .cell.has-letter .points {
+        font-size: 0.35rem;
+        right: 1px;
+        bottom: 0px;
     }
 
     .cell.star::before {
-        font-size: 1rem;
+        font-size: 0.85rem;
     }
 
     .rack-input {
-        width: 38px;
-        height: 38px;
-        font-size: 1.2rem;
+        width: 36px;
+        height: 36px;
+        font-size: 1.1rem;
     }
 }
 
