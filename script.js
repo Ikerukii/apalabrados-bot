@@ -158,14 +158,19 @@ document.addEventListener('DOMContentLoaded', () => {
         return letterPoints[upper] !== undefined ? letterPoints[upper] : '';
     }
 
-    function placeLetter(cell, char, isWildcard = false) {
+    function placeLetter(cell, char, isWildcard = false, animate = false) {
         if (char === ' ') {
             removeLetter(cell);
             return;
         }
         cell.classList.add('has-letter');
-        if (isWildcard) cell.classList.add('is-wildcard'); // Clase opcional para darle otro estilo
+        if (isWildcard) cell.classList.add('is-wildcard');
         else cell.classList.remove('is-wildcard');
+
+        if (animate) {
+            cell.classList.add('fx-drop-in');
+            setTimeout(() => cell.classList.remove('fx-drop-in'), 500);
+        }
 
         const points = isWildcard ? 0 : getPoints(char);
         cell.innerHTML = `
@@ -512,7 +517,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function applyMove(move) {
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+
+    async function applyMove(move) {
         // Limpiar estilos temporales de preview
         document.querySelectorAll('.cell.preview').forEach(cell => {
             cell.classList.remove('preview');
@@ -522,7 +529,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // Extraer letras del atril
         let currentRack = Array.from(rackInputs).map(input => input.value);
 
-        // Aplicar permanentemente y consumir del atril
+        // Ocultar panel de resultados inmediatamente para focus visual
+        resultsPanel.classList.add('hidden');
+        currentPreviewMove = null;
+
+        // Limpiar botones de UI mientras se anima
+        solveBtn.disabled = true;
+
+        // Aplicar permanentemente y consumir del atril con animacion escalonada
         for (let i = 0; i < move.word.length; i++) {
             let r = move.dir === 'H' ? move.r : move.r + i;
             let c = move.dir === 'H' ? move.c + i : move.c;
@@ -548,13 +562,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     rackInputs[rackIndex].value = '';
                 }
 
-                placeLetter(cell, charToPlace, isWildcard);
+                placeLetter(cell, charToPlace, isWildcard, true);
+
+                // Efecto escalonado (90ms)
+                await delay(90);
             }
         }
 
-        // Ocultar panel de resultados
-        resultsPanel.classList.add('hidden');
-        currentPreviewMove = null;
+        solveBtn.disabled = false;
     }
 
     createBoard();
