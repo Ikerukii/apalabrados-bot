@@ -119,6 +119,10 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedCell = cell;
         selectedCell.classList.add('selected');
         updateDirectionIndicator(selectedCell);
+
+        // Forzar teclado en móviles
+        const hiddenInput = document.getElementById('hidden-keyboard-input');
+        if (hiddenInput) hiddenInput.focus();
     }
 
     function moveSelection(dRow, dCol) {
@@ -246,9 +250,46 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectedCell.classList.remove('selected');
                 delete selectedCell.dataset.dir;
                 selectedCell = null;
+                const hiddenInput = document.getElementById('hidden-keyboard-input');
+                if (hiddenInput) hiddenInput.blur();
             }
         }
     });
+
+    // --- CAPTURA DE TECLADO MÓVIL (Vía Input Oculto) ---
+    const hiddenInput = document.getElementById('hidden-keyboard-input');
+    if (hiddenInput) {
+        hiddenInput.addEventListener('input', (e) => {
+            if (!selectedCell) {
+                hiddenInput.value = '';
+                return;
+            }
+            const val = hiddenInput.value;
+            if (val.length > 0) {
+                const char = val[val.length - 1];
+                if (/^[a-zA-ZñÑ]$/.test(char)) {
+                    placeLetter(selectedCell, char, false);
+                    moveToNextCell();
+                }
+            }
+            hiddenInput.value = '';
+        });
+
+        hiddenInput.addEventListener('keydown', (e) => {
+            if (!selectedCell) return;
+            if (e.key === 'Backspace' || e.key === 'Delete') {
+                e.preventDefault();
+                const row = parseInt(selectedCell.dataset.row);
+                const col = parseInt(selectedCell.dataset.col);
+                if (boardState[row][col].letter) {
+                    removeLetter(selectedCell);
+                } else {
+                    moveToPrevCell();
+                    if (selectedCell) removeLetter(selectedCell);
+                }
+            }
+        });
+    }
 
     // --- LÓGICA DEL ATRIL Y SOLVER ---
     const rackInputs = document.querySelectorAll('.rack-input');

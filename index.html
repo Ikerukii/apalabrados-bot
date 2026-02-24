@@ -64,6 +64,9 @@
         <main class="main-dashboard">
             <div class="left-column">
                 <div id="board" class="board"></div>
+                <!-- Input virtual invisible para forzar el teclado en móviles -->
+                <input type="text" id="hidden-keyboard-input"
+                    style="position: absolute; opacity: 0; left: -9999px; font-size: 16px;">
             </div>
 
             <div class="right-column">
@@ -152,7 +155,7 @@
     <script src="firebase-config.js?v=8"></script>
     <script src="monetization.js?v=9"></script>
     <script src="firebase-auth.js?v=8"></script>
-    <script src="script.js?v=23"></script>
+    <script src="script.js?v=24"></script>
     <script src="ocr.js?v=22"></script>
     <script src="solver.js?v=22"></script>
 </body>
