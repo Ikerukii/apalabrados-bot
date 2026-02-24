@@ -517,10 +517,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.cell.preview').forEach(cell => {
             cell.classList.remove('preview');
             cell.style.filter = "";
-            // Keep the has-letter and innerHTML, we will properly set it below
         });
 
-        // Aplicar permanentemente
+        // Extraer letras del atril
+        let currentRack = Array.from(rackInputs).map(input => input.value);
+
+        // Aplicar permanentemente y consumir del atril
         for (let i = 0; i < move.word.length; i++) {
             let r = move.dir === 'H' ? move.r : move.r + i;
             let c = move.dir === 'H' ? move.c + i : move.c;
@@ -529,12 +531,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const cell = boardState[r][c].element;
             if (!boardState[r][c].letter) {
-                placeLetter(cell, move.word[i]);
+                const charToPlace = move.word[i].toUpperCase();
+
+                // Intentar encontrar la letra exacta en el atril, o un asterisco en su defecto
+                let rackIndex = currentRack.indexOf(charToPlace);
+                let isWildcard = false;
+
+                if (rackIndex === -1 && charToPlace !== '*') {
+                    rackIndex = currentRack.indexOf('*');
+                    isWildcard = true;
+                }
+
+                // Si la ficha o asterisco existe en el atril, la consumimos visualmente (la vaciamos)
+                if (rackIndex !== -1) {
+                    currentRack[rackIndex] = '';
+                    rackInputs[rackIndex].value = '';
+                }
+
+                placeLetter(cell, charToPlace, isWildcard);
             }
         }
-
-        // Limpiar atril
-        rackInputs.forEach(input => input.value = '');
 
         // Ocultar panel de resultados
         resultsPanel.classList.add('hidden');
