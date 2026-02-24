@@ -1,3 +1,5 @@
+import { saveBoardToCloud, loadBoardFromCloud } from './cloud-sync.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     const boardElement = document.getElementById('board');
     const boardSize = 15;
@@ -81,7 +83,39 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+
+        // Auto-save to cloud if authenticated
+        const rackInputs = document.querySelectorAll('.rack-input');
+        if (window.currentFirebaseUid) {
+            saveBoardToCloud(window.currentFirebaseUid, boardState, rackInputs);
+        }
     }
+
+    // Hook para que firebase-auth nos configure el UID y re-pille datos
+    window.currentFirebaseUid = null;
+    window.triggerCloudLoad = async (uid) => {
+        window.currentFirebaseUid = uid;
+        if (!uid) return;
+        const rackInputs = document.querySelectorAll('.rack-input');
+        const cloudBoardStr = await loadBoardFromCloud(uid, placeLetter, removeLetter, rackInputs);
+        if (cloudBoardStr) {
+            // Restore cloud state (overshadows localstorage)
+            for (let r = 0; r < 15; r++) {
+                for (let c = 0; c < 15; c++) {
+                    const char = cloudBoardStr[r][c];
+                    const cell = boardState[r][c].element;
+                    if (char !== '.') {
+                        const isWildcard = char === char.toLowerCase() && char !== char.toUpperCase();
+                        placeLetter(cell, char.toUpperCase(), isWildcard, false, true);
+                    } else {
+                        removeLetter(cell, true);
+                    }
+                }
+            }
+            saveBoardState(); // save local
+            console.log("Tablero restaurado desde la nube.");
+        }
+    };
 
     function restoreBoardState() {
         try {

@@ -27,6 +27,12 @@ async function loginWithGoogle() {
         return;
     }
 
+    const btn = document.getElementById('login-btn');
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '⏳ Cargando...';
+    }
+
     const provider = new firebase.auth.GoogleAuthProvider();
     provider.setCustomParameters({
         prompt: 'select_account'
@@ -36,11 +42,19 @@ async function loginWithGoogle() {
         await auth.signInWithPopup(provider);
     } catch (error) {
         if (error.code === 'auth/popup-blocked') {
-            console.warn("Popup blocked strictly. Alerting the user to check their iOS Safari settings.");
-            alert("Tu navegador (Safari/Chrome) está bloqueando la ventana de inicio de sesión de Google.\n\nPor favor, ve a los Ajustes de tu móvil o a la barra de direcciones y permite las 'Ventanas Emergentes' o 'Pop-ups' para esta web.");
+            console.warn("Popup blocked by browser. Falling back to redirect...");
+            // Usar sessionStorage para recordar que estamos volviendo de un login
+            sessionStorage.setItem('authRedirectPending', 'true');
+            // Lanzar redirección a pantalla completa
+            auth.signInWithRedirect(provider);
         } else {
             console.error("Error en login:", error);
             alert(`Fallo en login:\nMotivo: ${error.message}\nCódigo: ${error.code}`);
+        }
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            renderLoginButton(); // Restore original appearance
         }
     }
 }
@@ -111,10 +125,18 @@ if (auth && db) {
             if (window.UsageTracker) {
                 window.UsageTracker.setPremiumStatus(isPremium);
             }
+
+            // 4. Iniciar Cloud Sync de Tablero
+            if (window.triggerCloudLoad) {
+                window.triggerCloudLoad(user.uid);
+            }
         } else {
             renderLoginButton();
             if (window.UsageTracker) {
                 window.UsageTracker.setPremiumStatus(false);
+            }
+            if (window.triggerCloudLoad) {
+                window.triggerCloudLoad(null);
             }
         }
     });
