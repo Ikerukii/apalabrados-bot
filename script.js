@@ -1,5 +1,3 @@
-import { saveBoardToCloud, loadBoardFromCloud } from './cloud-sync.js';
-
 document.addEventListener('DOMContentLoaded', () => {
     const boardElement = document.getElementById('board');
     const boardSize = 15;
@@ -86,8 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Auto-save to cloud if authenticated
         const rackInputs = document.querySelectorAll('.rack-input');
-        if (window.currentFirebaseUid) {
-            saveBoardToCloud(window.currentFirebaseUid, boardState, rackInputs);
+        if (window.currentFirebaseUid && window.saveBoardToCloud) {
+            window.saveBoardToCloud(window.currentFirebaseUid, boardState, rackInputs);
         }
     }
 
@@ -95,9 +93,9 @@ document.addEventListener('DOMContentLoaded', () => {
     window.currentFirebaseUid = null;
     window.triggerCloudLoad = async (uid) => {
         window.currentFirebaseUid = uid;
-        if (!uid) return;
+        if (!uid || !window.loadBoardFromCloud) return;
         const rackInputs = document.querySelectorAll('.rack-input');
-        const cloudBoardStr = await loadBoardFromCloud(uid, placeLetter, removeLetter, rackInputs);
+        const cloudBoardStr = await window.loadBoardFromCloud(uid, placeLetter, removeLetter, rackInputs);
         if (cloudBoardStr) {
             // Restore cloud state (overshadows localstorage)
             for (let r = 0; r < 15; r++) {
