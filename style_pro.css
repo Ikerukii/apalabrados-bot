@@ -61,6 +61,7 @@ body::before {
     padding: 24px;
     width: 100%;
     max-width: 1200px;
+    box-sizing: border-box;
     background: rgba(15, 23, 42, 0.6);
     border-radius: 24px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
@@ -113,6 +114,7 @@ p {
     grid-template-columns: minmax(300px, 600px) 1fr;
     gap: 20px;
     width: 100%;
+    box-sizing: border-box;
 }
 
 .left-column {
@@ -777,15 +779,28 @@ p {
         font-size: 2rem;
     }
 
+    body {
+        padding: 0;
+        margin: 0;
+    }
+
     .app-container {
-        padding: 8px;
+        padding: 10px 4px;
+        margin: 0;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        width: 100%;
+        max-width: 100vw;
+        box-sizing: border-box;
     }
 
     .board {
         padding: 1px;
         border-width: 2px;
         width: 100%;
-        max-width: 100%;
+        max-width: 100vw;
+        box-sizing: border-box;
     }
 
     .cell {
@@ -818,10 +833,14 @@ p {
 @media (max-width: 900px) {
     .main-dashboard {
         grid-template-columns: 1fr;
+        width: 100%;
+        max-width: 100vw;
+        box-sizing: border-box;
     }
 
     .app-container {
-        padding: 10px;
+        padding: 12px;
+        box-sizing: border-box;
     }
 
     h1 {
