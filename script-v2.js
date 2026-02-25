@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("V2 LOADED - " + new Date().toLocaleTimeString());
+    // alert("Bot Actualizado: Pulsa Aceptar y refresca una última vez.");
     const boardElement = document.getElementById('board');
     const boardSize = 15;
     let selectedCell = null;
