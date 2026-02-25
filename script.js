@@ -17,21 +17,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // TP: esquinas y centro de los lados. 
     // TL: Abundantes en diagonales medias.
     const boardLayout = [
-        [0, 0, 4, 0, 2, 0, 0, 0, 0, 0, 2, 0, 4, 0, 0],
-        [0, 2, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 2, 0],
-        [4, 0, 1, 0, 0, 0, 2, 0, 2, 0, 0, 0, 1, 0, 4],
-        [0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 2, 0, 0, 0],
-        [2, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 2],
-        [0, 3, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 3, 0],
-        [0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 1, 0, 2, 0, 0],
-        [0, 0, 0, 3, 0, 0, 0, 5, 0, 0, 0, 3, 0, 0, 0],
-        [0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 1, 0, 2, 0, 0],
-        [0, 3, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 3, 0],
-        [2, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 2],
-        [0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 2, 0, 0, 0],
-        [4, 0, 1, 0, 0, 0, 2, 0, 2, 0, 0, 0, 1, 0, 4],
-        [0, 2, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 2, 0],
-        [0, 0, 4, 0, 2, 0, 0, 0, 0, 0, 2, 0, 4, 0, 0]
+        [0, 0, 4, 0, 0, 2, 0, 0, 0, 2, 0, 0, 4, 0, 0],
+        [0, 2, 0, 1, 0, 0, 3, 0, 3, 0, 0, 1, 0, 2, 0],
+        [4, 0, 3, 0, 1, 0, 0, 0, 0, 0, 1, 0, 3, 0, 4],
+        [0, 1, 0, 2, 0, 1, 0, 0, 0, 1, 0, 2, 0, 1, 0],
+        [0, 0, 1, 0, 3, 0, 1, 0, 1, 0, 3, 0, 1, 0, 0],
+        [2, 0, 0, 1, 0, 2, 0, 0, 0, 2, 0, 1, 0, 0, 2],
+        [0, 3, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 3, 0],
+        [0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0],
+        [0, 3, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 3, 0],
+        [2, 0, 0, 1, 0, 2, 0, 0, 0, 2, 0, 1, 0, 0, 2],
+        [0, 0, 1, 0, 3, 0, 1, 0, 1, 0, 3, 0, 1, 0, 0],
+        [0, 1, 0, 2, 0, 1, 0, 0, 0, 1, 0, 2, 0, 1, 0],
+        [4, 0, 3, 0, 1, 0, 0, 0, 0, 0, 1, 0, 3, 0, 4],
+        [0, 2, 0, 1, 0, 0, 3, 0, 3, 0, 0, 1, 0, 2, 0],
+        [0, 0, 4, 0, 0, 2, 0, 0, 0, 2, 0, 0, 4, 0, 0]
     ];
 
     function createBoard() {
@@ -81,38 +81,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         localStorage.setItem(SAVE_KEY, JSON.stringify(data));
-
-        // Auto-save to cloud if authenticated
-        const rackInputs = document.querySelectorAll('.rack-input');
-        if (window.currentFirebaseUid && window.saveBoardToCloud) {
-            window.saveBoardToCloud(window.currentFirebaseUid, boardState, rackInputs);
-        }
     }
 
-    // Hook para que firebase-auth nos configure el UID y re-pille datos
+    // Hook para que firebase-auth nos configure el UID (para historial, etc)
     window.currentFirebaseUid = null;
-    window.triggerCloudLoad = async (uid) => {
+    window.setFirebaseUser = (uid) => {
         window.currentFirebaseUid = uid;
-        if (!uid || !window.loadBoardFromCloud) return;
-        const rackInputs = document.querySelectorAll('.rack-input');
-        const cloudBoardStr = await window.loadBoardFromCloud(uid, placeLetter, removeLetter, rackInputs);
-        if (cloudBoardStr) {
-            // Restore cloud state (overshadows localstorage)
-            for (let r = 0; r < 15; r++) {
-                for (let c = 0; c < 15; c++) {
-                    const char = cloudBoardStr[r][c];
-                    const cell = boardState[r][c].element;
-                    if (char !== '.') {
-                        const isWildcard = char === char.toLowerCase() && char !== char.toUpperCase();
-                        placeLetter(cell, char.toUpperCase(), isWildcard, false, true);
-                    } else {
-                        removeLetter(cell, true);
-                    }
-                }
-            }
-            saveBoardState(); // save local
-            console.log("Tablero restaurado desde la nube.");
-        }
     };
 
     function restoreBoardState() {
@@ -604,6 +578,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Efecto escalonado (90ms)
                 await delay(90);
             }
+        }
+
+        // --- Registro en Firebase (Historial) ---
+        // Obtenemos el usuario actual de forma segura
+        const user = window.FirebaseAuth ? window.FirebaseAuth.getCurrentUser() : null;
+        if (user && window.logPlayToCloud) {
+            window.logPlayToCloud(user.uid, move);
         }
 
         solveBtn.disabled = false;

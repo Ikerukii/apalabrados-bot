@@ -23,21 +23,21 @@ class Trie {
 }
 
 const apalabradosLayout = [
-    [0, 0, 4, 0, 2, 0, 0, 0, 0, 0, 2, 0, 4, 0, 0],
-    [0, 2, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 2, 0],
-    [4, 0, 1, 0, 0, 0, 2, 0, 2, 0, 0, 0, 1, 0, 4],
-    [0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 2, 0, 0, 0],
-    [2, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 2],
-    [0, 3, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 3, 0],
-    [0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 1, 0, 2, 0, 0],
-    [0, 0, 0, 3, 0, 0, 0, 5, 0, 0, 0, 3, 0, 0, 0],
-    [0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 1, 0, 2, 0, 0],
-    [0, 3, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 3, 0],
-    [2, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 2],
-    [0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 2, 0, 0, 0],
-    [4, 0, 1, 0, 0, 0, 2, 0, 2, 0, 0, 0, 1, 0, 4],
-    [0, 2, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 2, 0],
-    [0, 0, 4, 0, 2, 0, 0, 0, 0, 0, 2, 0, 4, 0, 0]
+    [0, 0, 4, 0, 0, 2, 0, 0, 0, 2, 0, 0, 4, 0, 0],
+    [0, 2, 0, 1, 0, 0, 3, 0, 3, 0, 0, 1, 0, 2, 0],
+    [4, 0, 3, 0, 1, 0, 0, 0, 0, 0, 1, 0, 3, 0, 4],
+    [0, 1, 0, 2, 0, 1, 0, 0, 0, 1, 0, 2, 0, 1, 0],
+    [0, 0, 1, 0, 3, 0, 1, 0, 1, 0, 3, 0, 1, 0, 0],
+    [2, 0, 0, 1, 0, 2, 0, 0, 0, 2, 0, 1, 0, 0, 2],
+    [0, 3, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 3, 0],
+    [0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0],
+    [0, 3, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 3, 0],
+    [2, 0, 0, 1, 0, 2, 0, 0, 0, 2, 0, 1, 0, 0, 2],
+    [0, 0, 1, 0, 3, 0, 1, 0, 1, 0, 3, 0, 1, 0, 0],
+    [0, 1, 0, 2, 0, 1, 0, 0, 0, 1, 0, 2, 0, 1, 0],
+    [4, 0, 3, 0, 1, 0, 0, 0, 0, 0, 1, 0, 3, 0, 4],
+    [0, 2, 0, 1, 0, 0, 3, 0, 3, 0, 0, 1, 0, 2, 0],
+    [0, 0, 4, 0, 0, 2, 0, 0, 0, 2, 0, 0, 4, 0, 0]
 ];
 
 class Solver {
@@ -145,7 +145,10 @@ class Solver {
 
     extendRight(row, startCol, currCol, node, rack, board, dir, isBoardEmpty, crossChecks, currentWord, placedTiles, results) {
         if (currCol === 15) {
-            this.recordPlay(row, startCol, currentWord, placedTiles, board, dir, isBoardEmpty, results);
+            // Check if it's a valid word even at the edge
+            if (node.isWord && placedTiles.length > 0) {
+                this.recordPlay(row, startCol, currentWord, placedTiles, board, dir, isBoardEmpty, results);
+            }
             return;
         }
 
@@ -160,6 +163,8 @@ class Solver {
         } else {
             // Empty cell. We can end the word here if valid.
             if (node.isWord && placedTiles.length > 0) {
+                // Ensure we haven't just matched an existing word without adding anything
+                // (though placedTiles.length > 0 already checks that we placed something new)
                 this.recordPlay(row, startCol, currentWord, placedTiles, board, dir, isBoardEmpty, results);
             }
 

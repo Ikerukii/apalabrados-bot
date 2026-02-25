@@ -94,17 +94,20 @@ if (auth && db) {
             // 1. Obtener datos de Firestore (Premium status)
             let isPremium = false;
 
-            // 👑 Acceso Administrador / Creador
-            // Sustituye el correo de abajo por el tuyo real de Google
-            const adminEmails = ["ifernandezillera@gmail.com"];
-            if (adminEmails.includes(user.email)) {
+            // 👑 Acceso Administrador / Creador / Cuentas Premium
+            const adminEmails = ["ifernandezillera@gmail.com", "irenezozayam@gmail.com"];
+            const userEmail = (user.email || "").toLowerCase().trim();
+
+            console.log("Checking whitelist for:", userEmail);
+            if (adminEmails.includes(userEmail)) {
+                console.log("User in whitelist, setting isPremium = true");
                 isPremium = true;
             }
 
             try {
                 const userDoc = await db.collection('users').doc(user.uid).get();
                 if (userDoc.exists) {
-                    isPremium = userDoc.data().is_premium || false;
+                    isPremium = isPremium || userDoc.data().is_premium || false;
                 } else {
                     // Crear documento inicial si no existe
                     await db.collection('users').doc(user.uid).set({
@@ -126,17 +129,17 @@ if (auth && db) {
                 window.UsageTracker.setPremiumStatus(isPremium);
             }
 
-            // 4. Iniciar Cloud Sync de Tablero
-            if (window.triggerCloudLoad) {
-                window.triggerCloudLoad(user.uid);
+            // 4. Configurar UID para otras funciones
+            if (window.setFirebaseUser) {
+                window.setFirebaseUser(user.uid);
             }
         } else {
             renderLoginButton();
             if (window.UsageTracker) {
                 window.UsageTracker.setPremiumStatus(false);
             }
-            if (window.triggerCloudLoad) {
-                window.triggerCloudLoad(null);
+            if (window.setFirebaseUser) {
+                window.setFirebaseUser(null);
             }
         }
     });
